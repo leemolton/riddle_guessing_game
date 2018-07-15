@@ -3,7 +3,7 @@ def show_menu():
     print("2. Add a riddle")
     print("3. Exit game")
     
-    option = input("Enter option: ")
+    option = input("Enter option ")
     return option
     
 def ask_questions():
