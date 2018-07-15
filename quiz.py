@@ -62,4 +62,3 @@ def game_loop():
         print("")
         
 game_loop() 
-

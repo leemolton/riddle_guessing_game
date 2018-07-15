@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Riddle Quiz</title>
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='new-age-css') }}" type="text/css"/>
+    </head>
+    
+    <body>
+        <nav class="navbar">
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('index') }}">Quiz</a></li>
+            </ul>
+        </nav>
+        
+        {% block content %)
+        {% endblock %}
+    </body>
+</html>
