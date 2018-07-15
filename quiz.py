@@ -1,3 +1,10 @@
+import os
+import json
+from flask import Flask
+
+app = Flask(__name__)
+app.secret_key = "secret"
+
 def show_menu():
     print("1. Answer a riddle")
     print("2. Add a riddle")
