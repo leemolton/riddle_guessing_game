@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>The Riddles game</title>
+        <h1>The Riddles Game</h1>
+        
+        <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/clean-blog.min.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" />
+    </head>
+        <body>
+<div class="row"?
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-preview">
+            <a href="users.txt">
+                <h2 class="username">
+                    <p>Please enter your username</p>
+                </h2>
+            </a>
+        <form method="POST" name="username" id="username">
+            <div class="control-group">
+                <div class="form-group floating-label-form-group-controls">
+                    <label>User name</label>
+                    <input type="text" class="form-control" placeholder="username" name="username" id="username" required data-validation-required>
+                    <p class="help-block text-danger"></p>
+                </div>
+            </div>
+            <br>
+            <div id="success"></div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+            </div>
+        </form>
+        </div>
+</div>
+        </body>
+    </html>
