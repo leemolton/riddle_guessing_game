@@ -88,14 +88,14 @@ def riddle(username):
 
 @app.route("/game_over", methods = ["GET","POST"])
 def game_over():
-	    answers = []
-	    with open("data/correct_answers.txt", "r") as correct_answers:
-		    answers = [row for row in correct_answers]
-     
-            
-        return render_template("game_over.html", answers = answers)
+	answers = []
+	with open("data/correct_answers.txt", "r") as correct_answers:
+		answers = [row for row in correct_answers]
+	
+		
+	return render_template("game_over.html", answers = answers)
 
-        
+
 if __name__ == '__main__':
 	app.run(host=os.environ.get("IP"),
 		port=int(os.environ.get("PORT")), 
