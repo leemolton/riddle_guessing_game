@@ -1,71 +1,102 @@
 import os
 import json
-from flask import Flask
+from flask import Flask, redirect, request, render_template
+
+
 
 app = Flask(__name__)
 app.secret_key = "secret"
 
-def show_menu():
-    print("1. Answer a riddle")
-    print("2. Add a riddle")
-    print("3. Exit game")
+
+"""
+Get all incorrect_answers():
+"""
+def get_all_incorrect_answers():
+	answers = []
+	with open("data/incorrect_answers.txt", "r") as incorrect_answers:
+			answers = [row for row in incorrect_answers]
+			return answers
+			
+
+"""
+Get all online_users():
+"""
+def get_all_online_users():
+    users = []
+    with open("data/users.txt", "r") as online_users:
+                users = [row for row in online_users]
+                return users
+
+
+"""
+Reusable function for opening a file and writing to it
+"""
+def write_file(filename, message):
+	with open (filename, 'a') as file:
+		file.writelines(message + "\n")
+
+
+"""
+Add new users to the users file
+"""
+def new_user(username):
+    write_file("data.users.txt", username)
     
-    option = input("Enter option ")
-    return option
+
+@app.route("/", methods =["GET", "POST"])
+def index():
+    """
+    Welcome page, add username.
+    """
+    if request.method == "POST":
+        new_user(request.form["username"])
+        return redirect(request.form["username"])
+    return render_template("index.html")
     
-def ask_questions():
-    questions = []
-    answers = []
+
+@app.route("/<username>", methods = ["GET","POST"]) #Username passed from index function, value optained from form post.     
+def riddle(username):
+    #Load the riddle file containing the riddles
+    riddles = []
+    with open("data/riddles.txt", "r") as riddle_data:
+        riddles = txt.read(riddle_data)
+        #Set the index to 0 to display the first riddle in the list first
+        index = 0
     
-    with open("riddles.txt", "r") as file:
-        lines = file.read().splitlines()
-        
-    for i, text in enumerate(lines):
-        if i%2 == 0:
-            questions.append(text)
-        else:
-            answers.append(text)
-            
-    number_of_questions = len(questions)
-    questions_and_answers = zip(questions, answers)
     
-    score = 0
-            
-    for question, answer in questions_and_answers:
-            guess = input(question + "> ")
-            if guess == answer:
-                score += 1
-                print("That's right!")
-                print(score)
+        if request.method == "POST":
+            index = int(request.form["index"])  #Specify index to be an integer not a string or else will return a type error
+            user_answer = request.form["answer"].lower()
+            if riddles[index]["answer"] == user_answer:
+                index +=1
+                write_file("data/correct_answers.txt", "{0}" "({1})" .format(user_answer, username))
             else:
-                print("Oh no that's wrong!")
+                write_file("data/incorrect_answers.txt", "{0}" "{1})" .format(user_answer, username))
             
-    print("You got {0} correct out of {1}".format(score,number_of_questions))  
+    
+        if request.method == "POST":
+            if user_answer == "palmtree" and index >= 7:
+                return redirect("game_over")
+            
+    
+    incorrect_answers = get_all_incorrect_answers()
+    online_users = get_all_online_users()
+    
+    
+    return render_template("riddles.html", riddle_question = riddles, index = index, online_users = online_users, incorrect_answers = incorrect_answers, username = username)
+    
+
+@app.route("/game_over", methods = ["GET","POST"])
+def game_over():
+	    answers = []
+	    with open("data/correct_answers.txt", "r") as correct_answers:
+		    answers = [row for row in correct_answers]
+     
+            
+        return render_template("game_over.html", answers = answers)
+
         
-def add_question():
-    print("")
-    question = input("Enter a question\n> ")
-    
-    print("")
-    print("Ok then, tell me the answer")
-    answer = input("{0}\n> ".format(question))
-    
-    file = open("riddles.txt", "a")
-    file.write(question + "\n")
-    file.write(answer + "\n")
-    file.close()
-    
-def game_loop():
-    while True:
-        option = show_menu()
-        if option == "1":
-            ask_questions()
-        elif option == "2":
-            add_question()
-        elif option == "3":
-            break
-        else:
-            print ("Invalid option")
-        print("")
-        
-game_loop() 
+if __name__ == '__main__':
+	app.run(host=os.environ.get("IP"),
+		port=int(os.environ.get("PORT")), 
+		debug=True)
