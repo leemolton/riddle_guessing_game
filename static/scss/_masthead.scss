@@ -1,47 +1,82 @@
 // Styling for the masthead
 header.masthead {
-    position: relative;
-
+  // TIP: Background images are set within the HTML using inline CSS!
+  margin-bottom: 50px;
+  background: no-repeat center center;
+  background-color: $gray-600;
+  background-attachment: scroll;
+  position: relative;
+  @include background-cover;
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     width: 100%;
-    padding-top: 150px;
-    padding-bottom: 100px;
-
+    background-color: $gray-900;
+    opacity: 0.5;
+  }
+  .page-heading,
+  .post-heading,
+  .site-heading {
+    padding: 200px 0 150px;
     color: white;
-    background: url('../img/bg-pattern.png'), $theme-secondary;
-    background: url('../img/bg-pattern.png'), -webkit-linear-gradient(to left, $theme-secondary, $theme-tertiary);
-    background: url('../img/bg-pattern.png'), linear-gradient(to left, $theme-secondary, $theme-tertiary);
-    .header-content {
-        max-width: 500px;
-        margin-bottom: 100px;
-
-        text-align: center;
-        h1 {
-            font-size: 30px;
-        }
+    @media only screen and (min-width: 768px) {
+      padding: 200px 0;
     }
-    .device-container {
-        max-width: 325px;
-        margin-right: auto;
-        margin-left: auto;
-        .screen img {
-            border-radius: 3px;
-        }
+  }
+  .page-heading,
+  .site-heading {
+    text-align: center;
+    h1 {
+      font-size: 50px;
+      margin-top: 0;
     }
-    @media (min-width: 992px) {
-        height: 100vh;
-        min-height: 775px;
-        padding-top: 0;
-        padding-bottom: 0;
-        .header-content {
-            margin-bottom: 0;
-
-            text-align: left;
-            h1 {
-                font-size: 50px;
-            }
-        }
-        .device-container {
-            max-width: 325px;
-        }
+    .subheading {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1.1;
+      display: block;
+      margin: 10px 0 0;
+      @include sans-serif-font;
     }
+    @media only screen and (min-width: 768px) {
+      h1 {
+        font-size: 80px;
+      }
+    }
+  }
+  .post-heading {
+    h1 {
+      font-size: 35px;
+    }
+    .meta,
+    .subheading {
+      line-height: 1.1;
+      display: block;
+    }
+    .subheading {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 10px 0 30px;
+      @include sans-serif-font;
+    }
+    .meta {
+      font-size: 20px;
+      font-weight: 300;
+      font-style: italic;
+      @include serif-font;
+      a {
+        color: $white;
+      }
+    }
+    @media only screen and (min-width: 768px) {
+      h1 {
+        font-size: 55px;
+      }
+      .subheading {
+        font-size: 30px;
+      }
+    }
+  }
 }
