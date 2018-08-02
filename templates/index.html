@@ -1,23 +1,28 @@
-<!DOCTYPE html>
-<html>
-    
-    <head>
-        <title>The Riddles game</title>
-        <h1>The Riddles Game</h1>
-        
-        <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/clean-blog.min.css') }}" type="text/css" />
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" />
-    </head>
-        <body>
-<div class="row"?
+{% extends 'base.html' %} {% block content %}
+
+<div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         <div class="post-preview">
             <a href="users.txt">
                 <h2 class="username">
                     <p>Please enter your username</p>
                 </h2>
-            </a>
+             </a>
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+            
+            </div>
+        </div>
+        
         <form method="POST" name="username" id="username">
             <div class="control-group">
                 <div class="form-group floating-label-form-group-controls">
@@ -29,10 +34,8 @@
             <br>
             <div id="success"></div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
-            </div>
+                <button type="submit" class="btn btn-primary" onclick="location.href('ready.html');" value="Redirect">Begin</button>
         </form>
         </div>
 </div>
-        </body>
-    </html>
+{% endblock %}

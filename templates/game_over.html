@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block content %}
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <div class="post-preview">
+            <a href="users.txt">
+                <h2 class="username">
+                    <p>Game over! You have scored {}.</p>
+                </h2>
+             </a>
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+            
+            </div>
+        </div>
+        
+        <form method="POST" name="username" id="username">
+            <div class="control-group">
+                <div class="form-group floating-label-form-group-controls">
+                    <label>User name</label>
+                    <input type="text" class="form-control" placeholder="username" name="username" id="username" required data-validation-required>
+                    <p class="help-block text-danger"></p>
+                </div>
+            </div>
+            <br>
+            <div id="success"></div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" onclick="location.href('ready.html');" value="Redirect">Begin</button>
+        </form>
+        </div>
+</div>
+{% endblock %}
+
+
+{% endblock %}
