@@ -23,14 +23,15 @@
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <div class="site-heading">
-              <h1>{{ riddle[index]["riddle"] }}</h1>
+              <h3> {{ riddle_question[index]["question"] }} </h3>
               <br>
               <form method="POST"
             <div class="control-group">
                 <br>
                     <h2><input type ="text placeholder="answer" name="answer" id="answer"></h2>
                     <input type="hidden" name="index" id="index" value="{{ index }}"
-                    <button class="btn">Submit</button>
+                    <button class="btn btn-default">Submit</button>
+            </div>
         </form>
         </div>
     </header>
@@ -56,22 +57,7 @@
                   </span>
                 </a>
               </li>
-              <li class="list-inline-item">
-                <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
+            
             </ul>
             <p class="copyright text-muted">Copyright &copy; Lee Molton 2018</p>
           </div>

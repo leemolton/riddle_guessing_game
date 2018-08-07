@@ -10,3 +10,8 @@ footer {
     border-top: 1px solid #ededed;
     color: #A9A9A9;
 }
+
+container {
+    height: 1267px;
+    width: 1900px;
+}

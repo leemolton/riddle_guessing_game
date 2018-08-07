@@ -1,53 +1,108 @@
 import os
-import difflib
+import json
+import copy
 from flask import Flask, redirect, render_template, request, flash
+from collections import Counter
+
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
 
 
 
-    
+"""
+Reusable function for opening a file and writing to it
+"""
+def write_file(filename, message):
+    with open (filename, 'a') as file:
+        file.writelines(message + "\n")
 
-@app.route('/', methods=["GET", "POST"])
+
+"""
+Add new users to the users file
+"""
+def new_user(username):
+    write_file("quiz/data/users.txt", username)
+ 
+ 
+"""
+Get all incorrect answers
+"""
+def get_all_incorrect_answers():
+    answers = []
+    with open("quiz/data/incorrect_answers.txt", "r") as incorrect_answers:
+        users = [row for row in incorrect_answers]
+        return answers[-7:]  
+        
+
+"""
+Get all online users
+"""
+def get_all_online_users():
+    users = []
+    with open("quiz/data/users.txt", "r") as online_users:
+        users = [row for row in online_users]
+        return users[-7:] 
+
+
+"""
+Get high scores
+"""
+def scores():
+    with open("quiz/data/scores.txt", "r") as scoreboard:
+        return Counter(scoreboard.read().split())
+    
+ 
+@app.route("/", methods=["GET", "POST"])
 def index():
+    """
+    Welcome page, add username.
+    """
     if request.method == "POST":
-        flash("You are now logged in {} !".format
-            (request.form["username"]))
-        print(request.form["username"])
-    return render_template("ready.html")
-    
+        new_user(request.form["username"])
+        return redirect(request.form["username"])
+    return render_template("index.html")
     
 
-def add_users(username):
-    """Add username to the users list """
-    print("")
-    question = input("Enter your username")
-    answer = input("{0}".format(username))
-    
-    file = open("data/users.txt","a")
-    file.write(username + "\n")
-    file.close()
-    
-    
+@app.route('/<username>', methods = ["GET", "POST"])
+def riddles(username):
+    #Load the json file containing the riddles
+    riddles = []
+    with open("quiz/data/riddles.json", "r") as riddle_data:
+        riddles = json.load(riddle_data)
+        
+        index = 0
+        score = 0
+        
+        
 
-@app.route('/ready')
-def ready():
-    return render_template("ready.html")
     
+    if request.method == "POST":
+        index = int(request.form["index"])
+        user_answer = request.form["answer"].lower()
+        if riddles[index]["answer"] == user_answer:
+            index += 1
+            write_file("quiz/data/correct_answers.txt", "{0}" " ({1})".format(user_answer, username))
+            score = score + 1
+        else:
+            write_file("quiz/data/incorrect_answers.txt", "{0}" " ({1})".format(user_answer, username))
+                
+        
+        if request.method == "POST":
+            if index >= 7:
+                write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(score, username))
+                return redirect("game_over")
+                 
+    incorrect_answers = get_all_incorrect_answers()
+    online_users = get_all_online_users()
+    return render_template("ready.html", riddle_question = riddles, index = index, online_users = online_users, incorrect_answers = incorrect_answers, username = username, score = score)
     
-def answer_riddles(riddle):
-    "Play game and answer riddles"
-    file = open("data.riddles.txt", "r")
-    guess == input(question + "> ")
-    if guess == answer:
-        score += 1
-        print("You're right!")
-        print(score)
-    else:
-        print("You're wrong!")
+      
+@app.route("/game_over", methods = ["GET", "POST"])
+def game_over():
     
-    
+    high_scores = scores()
+    return render_template("game_over.html", high_scores = high_scores)
 
 
 if __name__ == '__main__':
