@@ -1,11 +1,10 @@
 body {
     font-family: Arial;
-    padding-top: 100px;
+    padding-top: 10px;
 }
 
 footer {
-    margin-top: 40px;
-    padding-top: 20px;
+
     padding-bottom: 20px;
     border-top: 1px solid #ededed;
     color: #A9A9A9;
@@ -14,4 +13,30 @@ footer {
 container {
     height: 1267px;
     width: 1900px;
+}
+
+container2 {
+    border-style: double;
+    width: 100px;
+   
+}
+
+background-image {
+    width: 5%;
+    height: 5px;
+}
+
+nav navbar-nav navbar-right {
+	color: white;
+}
+
+overlay {
+    opacity:0.8;
+    background-color:#ccc;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:1000;
 }
