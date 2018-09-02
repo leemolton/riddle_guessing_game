@@ -1,75 +1,39 @@
-<html>
-    <head>
-        <title>The Riddles Game</title>
-        
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
-    </head>
-    
-    <body>
-         <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-      <div class="container">
-        <h1>Player: {{ username }}</h1>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    
-       <!-- Page Header -->
-    <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/home-bg.jpg') }}">
-      <div class="container">
-        <div class="overlay"></div>
+{% extends 'base.html' %} {% block content %}
+
+    <!-- Main Content -->
+    <div class="container2">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <div class="site-heading">
               <h3> {{ riddle_question[index]["question"] }} </h3>
-              <br>
-              <form method="POST"
-            <div class="control-group">
-                <br>
-                    <h2><input type ="text placeholder="answer" name="answer" id="answer"></h2>
-                    <input type="hidden" name="index" id="index" value="{{ index }}"
-                    <button class="btn btn-default">Submit</button>
+              
+            <form method="POST"
+            <div class="form-group button-submit">
+                    <h2><input type ="submit="answer" name="answer" id="answer"></h2>
+                    
+                    <button class="btn btn-primary btn-sm">Submit</button>
+                    <input type="value" name="index" id="index" value="{{ index }}"
             </div>
         </form>
         </div>
-    </header>
 
-    <!-- Main Content -->
-    <div class="container">
-      {% block content %} {% endblock %}
+    <br>
+    <br>
+    <div class="container-fluid text-center">
+    
+        <div class="col-lg-6 sidenav">
+            <h1>Incorrect Answers: </h1>
+        <br>
+        {% for incorrect in incorrect_answers %}
+        <ul>{{ incorrect }}</ul>
+        {% endfor %}
+        
+        <br>
+        <br>
+        </div>
+        
+      </div>
+    </div>
     </div>
 
-    <hr>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item">
-                <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-            
-            </ul>
-            <p class="copyright text-muted">Copyright &copy; Lee Molton 2018</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Custom scripts for this template -->
-    <script src="{{ url_for('static', filename='js/clean-blog.min.js') }}"></script>
-    </body>
-</html>
+{% endblock %}
