@@ -64,48 +64,50 @@ def index():
     return render_template("index.html")
     
 
-@app.route('/<username>', methods = ["GET", "POST"])
-def riddles(username):
-    #Load the json file containing the riddles
-    riddles = []
-    with open("quiz/data/riddles.json", "r") as riddle_data:
-        riddles = json.load(riddle_data)
-        
-        index = 0
-        score = 0
-        
-        
-
-    
-    if request.method == "POST":
-        index = int(request.form["index"])
-        user_answer = request.form["answer"].lower()
-        if riddles[index]["answer"] == user_answer:
-            index += 1
-            write_file("quiz/data/correct_answers.txt", "{0}" " ({1})".format(user_answer, username))
-            score = score + 1
-        else:
-            write_file("quiz/data/incorrect_answers.txt", "{0}" " ({1})".format(user_answer, username))
-                
-        
-        if request.method == "POST":
-            if index >= 7:
-                write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(score, username))
-                return redirect("game_over")
-                 
-    incorrect_answers = get_all_incorrect_answers()
-    online_users = get_all_online_users()
-    return render_template("ready.html", riddle_question = riddles, index = index, online_users = online_users, incorrect_answers = incorrect_answers, username = username, score = score)
-    
-      
-@app.route("/game_over", methods = ["GET", "POST"])
+@app.route("/<username>", methods = ["GET","POST"]) #Username passed from index function, value optained from form post. 
+def riddle(username):
+	#Load the json file containing the riddles
+	riddles = []
+	with open("quiz/data/riddles.json", "r") as riddle_data:
+		riddles = json.load(riddle_data)	
+		#Set the index to 0 to display the first riddle in the list first
+		index = 0
+		score = 0
+		
+		
+		if request.method == "POST":
+			index = int(request.form["index"])	#Specify index to be an integer not a string or else will return a type error
+			user_answer = request.form["answer"].lower()
+			if riddles[index]["answer"] == user_answer:
+				write_file("quiz/data/correct_answers.txt", "{0}" " ({1})" .format(user_answer, username))
+				score = score + 1
+			else:
+			    index += 1
+			    write_file("quiz/data/incorrect_answers.txt", "{0}" " ({1})" .format(user_answer, username))
+			
+		
+		if request.method == "POST":
+			if index >= 3:
+				write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(score, username))
+				return redirect("game_over")
+	
+	
+	incorrect_answers = get_all_incorrect_answers()
+	online_users = get_all_online_users()
+	
+			
+	return render_template("ready.html", riddle_question = riddles, index = index, online_users = online_users, incorrect_answers = incorrect_answers, username = username, score = score)
+	
+	
+@app.route("/game_over", methods = ["GET","POST"])
 def game_over():
-    
-    high_scores = scores()
-    return render_template("game_over.html", high_scores = high_scores)
+	
+	high_scores = scores()
+			
+	return render_template("game_over.html", high_scores = high_scores)
 
 
 if __name__ == '__main__':
-    app.run(host=os.environ.get('IP'),
-            port=int(os.environ.get('PORT')),
-            debug=True)
+	app.run(host=os.environ.get("IP"),
+		port=int(os.environ.get("PORT")), 
+		debug=True)
