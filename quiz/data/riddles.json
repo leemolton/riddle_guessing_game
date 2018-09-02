@@ -1,4 +1,9 @@
 [
+        {
+        "question":"What gets broken without being held? ",
+        "answer":"promise"
+    },
+    
     {
         "question":"Brothers and sisters I have none but this man's father is my father's son. Who is the man? ", 
         "answer":"The answer is simple, the man is my son"
@@ -10,15 +15,12 @@
 
     {
         "question":"Who makes it, has no need of it.Who buys it, has no use for it. Who uses it can neither see nor feel it. What is it? ",
-        "answer":"A COFFIN"
+        "answer":"A coffin"
     },    
 
     {
         "question":"What can travel around the world while staying in a corner? ",
         "answer":"A STAMP"
-    },
-    {
-        "question":"What gets broken without being held? ",
-        "answer":"A PROMISE"
     }
+
 ]
