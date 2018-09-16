@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+    <title>Lee's Riddles Game</title>
 {% extends 'base.html' %} {% block content %}
 
     <!-- Main Content -->
@@ -7,12 +10,12 @@
             <div class="site-heading">
               <h3> {{ riddle_question[index]["question"] }} </h3>
               
-            <form method="POST"
+            <form method="POST">
             <div class="form-group button-submit">
-                    <h2><input type ="submit="answer" name="answer" id="answer"></h2>
+                    <h2><input type ="text" name="answer" id="answer"></h2>
                     
                     <button class="btn btn-primary btn-sm">Submit</button>
-                    <input type="value" name="index" id="index" value="{{ index }}"
+                    <input type="text" name="index" ="{{ index }}">
             </div>
         </form>
         </div>

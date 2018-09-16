@@ -86,6 +86,7 @@ def riddle(username):
 			    write_file("quiz/data/incorrect_answers.txt", "{0}" " ({1})" .format(user_answer, username))
 			
 		
+		#To end the game after 3 incorrect answers
 		if request.method == "POST":
 			if index >= 3:
 				write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(score, username))
