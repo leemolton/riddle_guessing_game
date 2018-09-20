@@ -2,9 +2,7 @@
 <html lang="en">
     <title>Lee's Riddles Game</title>
 {% extends 'base.html' %} {% block content %}
-
-    <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="row">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             <ul class="flashes">
@@ -17,26 +15,14 @@
         </div>
         <div class="post-preview">
             <a href="users.txt">
-                <h2 class="username">Please enter your username</h2></a>
+                <h3 class="username">Please enter your username</h3></a>
         </div>
-    </div>
     <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+        <form method="POST" align="center">
+            <div class="form-group button-submit">
+                <input type="text" name="username" id="username" required data-validation-required>
+                <button type="submit" class="btn btn-primary">Begin</button>
             </div>
     </div>
-        <form method="POST" name="username" id="username">
-            <div class="control-group">
-                <div class="form-group floating-label-form-group-controls">
-                    <label>User name</label>
-                    <input type="text" class="form-control" placeholder="username" required data-validation-required>
-                    <p class="help-block text-danger"></p>
-                </div>
-            </div>
-            <br>
-            <div id="success">
-                <div class="form-group">
-                <a href="ready.html" class="btn btn-primary" >Begin</a>
-                </div>
-            </div>
         </form>
 {% endblock %}

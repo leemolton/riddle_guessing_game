@@ -1,12 +1,10 @@
 <html>
     <head>
         <title>Lee's Riddles Game</title>
-        
         <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/clean-blog.min.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
     </head>
-    
     <body>
          <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
@@ -20,35 +18,33 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
               <a href="{{ url_for('index') }}">Home</a>
-              <a href="{{ url_for('index') }}">Leaderboard</a>
+              <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
             </li>
-           
           </ul>
         </div>
       </div>
     </nav>
-
     <!-- Page Header -->
     <header class="masthead" style="background-image: url('https://lh3.googleusercontent.com/4mq9IpZnGuEEhMJhBG4CTakVnS5dIil8Rm8YFlNo6wTuMzoV9FYBAIDbRnwLJwH1cig') ">
       <div class="container">
-        <div class="overlay"></div>
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="site-heading">
-              <h4>Lee's World Famous Riddles Game</h4>
-              <span class="subheading">Are you clever enough to beat me? Come and have a go at my riddles!</span>
+        <div class="overlay">
+        </div>
+            <div class="col-sm-8 col-md-10 mx-auto">
+              <div class="site-heading">
+                <h5>Lee's World Famous Riddles Game</h5>
+                <span class="subheading">Are you clever enough to beat me? Come and have a go at my riddles!</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </header>
-
+    
     <!-- Main Content -->
     <div class="container">
       {% block content %} {% endblock %}
     </div>
-
     
-
     <!-- Bootstrap core JavaScript -->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
