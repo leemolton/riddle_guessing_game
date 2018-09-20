@@ -1,7 +1,7 @@
 import os
 import json
 import copy
-from flask import Flask, redirect, render_template, request, flash
+from flask import Flask, flash, session, redirect, render_template, request, flash
 from collections import Counter
 
 
@@ -60,6 +60,10 @@ def index():
     """
     if request.method == "POST":
         new_user(request.form["username"])
+        session['username'] = request.form['username']
+        session['index'] = 0
+        session['attempts'] = 0
+        session['score'] = 0
         return redirect(request.form["username"])
     return render_template("index.html")
     
@@ -70,34 +74,29 @@ def riddle(username):
 	riddles = []
 	with open("quiz/data/riddles.json", "r") as riddle_data:
 		riddles = json.load(riddle_data)	
-		#Set the index to 0 to display the first riddle in the list first
-		index = 0
-		score = 0
-		
-		
-		if request.method == "POST":
-			index = int(request.form["index"])	#Specify index to be an integer not a string or else will return a type error
-			user_answer = request.form["answer"].lower()
-			if riddles[index]["answer"] == user_answer:
-				write_file("quiz/data/correct_answers.txt", "{0}" " ({1})" .format(user_answer, username))
-				score = score + 1
-			else:
-			    index += 1
-			    write_file("quiz/data/incorrect_answers.txt", "{0}" " ({1})" .format(user_answer, username))
-			
-		
+
+	if request.method == "POST":
+		user_answer = request.form["answer"].lower()
+		if riddles[session['index']]["answer"] == user_answer:
+			session['score'] += 1
+			flash('You have got it right!')
+		else:
+		    
+		    session['attempts'] += 1
+		    
+		    
 		#To end the game after 3 incorrect answers
-		if request.method == "POST":
-			if index >= 3:
-				write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(score, username))
-				return redirect("game_over")
+		if session['attempts'] >= 3:
+			write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(session['score'], username))
+			return redirect("game_over")
 	
 	
 	incorrect_answers = get_all_incorrect_answers()
 	online_users = get_all_online_users()
 	
 			
-	return render_template("ready.html", riddle_question = riddles, index = index, online_users = online_users, incorrect_answers = incorrect_answers, username = username, score = score)
+	return render_template("ready.html", riddle_question=riddles, index=session['index'], 
+		attempts=session['attempts'], online_users=online_users, incorrect_answers=incorrect_answers, username=username, score=session['score'])
 	
 	
 @app.route("/game_over", methods = ["GET","POST"])
