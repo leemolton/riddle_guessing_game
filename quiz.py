@@ -1,9 +1,8 @@
 import os
 import json
 import copy
-from flask import Flask, flash, session, redirect, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, session
 from collections import Counter
-
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
@@ -24,26 +23,6 @@ Add new users to the users file
 def new_user(username):
     write_file("quiz/data/users.txt", username)
  
- 
-"""
-Get all incorrect answers
-"""
-def get_all_incorrect_answers():
-    answers = []
-    with open("quiz/data/incorrect_answers.txt", "r") as incorrect_answers:
-        users = [row for row in incorrect_answers]
-        return answers[-7:]  
-        
-
-"""
-Get all online users
-"""
-def get_all_online_users():
-    users = []
-    with open("quiz/data/users.txt", "r") as online_users:
-        users = [row for row in online_users]
-        return users[-7:] 
-
 
 # Function to add a player's score to the leaderboard
 def add_to_scoreboard(username, final_score):
@@ -59,11 +38,11 @@ def get_leaders():
         leaders = [line for line in leaders.readlines()[1:]]
         sorted_leaders = []
         for leader in leaders:
-            tupe = (leader.split(':')[0].strip(), int(leader.split(':')[1].strip()))
+            tupe = (leader.split(':')[0].strip())
             sorted_leaders.append(tupe)
             
         # Sort leaders and display top 10
-        return sorted(sorted_leaders, key=lambda x: x[1], reverse = True)[:10]
+        return sorted(sorted_leaders, key=lambda x: x[:1], reverse = True)[:10]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -110,31 +89,25 @@ def riddle(username):
     
     # Return final score and add player to scoreboard
     add_to_scoreboard(username, session['score'])
-    return render_template('scores.html', final_score=session('score'), leaders=get_leaders())
+    return render_template('scores.html', final_score = session('score'), leaders = get_leaders())
+  
     
 # Display for the scoreboard
 @app.route('/leaders')
 def leaders():
     leaders = get_leaders()
     return render_template("scores.html", leaders=leaders)
-	        
  
  
     # To end the game after 3 incorrect answers
-    if session['attempts'] >= 3:
+    if session['attempts'] <= 3:
             write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(session['score'], session['username']))
-            return redirect("game_over")		    
-		    
-
-    
-    
-    incorrect_answers = get_all_incorrect_answers()
+            return redirect("game_over")
     
     context = {
         'riddle_question': session['riddle'],
         'index': session['index'],
         'attempts': session['attempts'],
-        'incorrect_answers': incorrect_answers,
         'username': session['username'],
         'score': session['score']
     }
