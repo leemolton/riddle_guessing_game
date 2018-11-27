@@ -35,6 +35,12 @@ def new_user(username):
     write_file("quiz/data/users.txt", username)
 
 
+index = 0
+score = 0
+attempts = 0
+question = 0
+
+
 """
 Load the json file containing the riddles
 """
@@ -46,10 +52,10 @@ def riddle(username):
         questions = json.load(json_data)
         print(questions)
         #Set the index to 0 to display the first riddle in the list 
-        session['index'] = 0
-        session['question'] = questions[0]['question']
-        session['score'] = 0
-        session['attempts'] = 0
+        #session['index'] = 0
+        #session['question'] = questions[0]['question']
+        #session['score'] = 0
+        #session['attempts'] = 0
         
         if request.method == "POST":
             print(session['index'])
@@ -61,10 +67,13 @@ def riddle(username):
                 print(user_answer)
                 if actual_answer == user_answer:
                     flash('You have got it right!')
-                    session['score'] += 1 # increments the score if the answer is correct
-                    session['index'] += 1 # increments the index to the next question if the answer is correct
-                    print(session['attempts'])
-                    print(session['score'])
+                    print('You have got it right!')
+                    #session['score'] += 1 # increments the score if the answer is correct
+                    #session['index'] += 1 # increments the index to the next question if the answer is correct
+                    #session['question']['index'] + 1
+                    print(session['index'])
+                    #print(session['attempts'])
+                    #print(session['score'])
                     print(session['question']) 
                 else:
                     session['attempts'] += 1
