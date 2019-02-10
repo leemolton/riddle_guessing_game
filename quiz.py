@@ -1,24 +1,11 @@
 import os
 import json
 import copy
-from flask import Flask, render_template, request, flash, redirect, session, url_for
+from flask import Flask, render_template, request, flash, redirect, session
 from collections import Counter
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
-
-
-
-"""
-Load the json file containing the riddles
-"""
-
-MAX_ATTEMPTS = 3
-questions = []
-print(questions)
-    #Load the json file containing the riddles
-with open("quiz/data/riddles.json", "r") as json_data:
-    questions = json.load(json_data)
 
 
 """
@@ -46,48 +33,52 @@ Add new users to the users file
 """
 def new_user(username):
     write_file("quiz/data/users.txt", username)
-    print(username)
 
 
-@app.route("/play", methods = ["GET", "POST"]) #Username passed from index function, value optained from form post. 
-def play(username):
-    print(questions)
-    #Set the index to 0 to display the first riddle in the list
-    session['index'] = 0
-    session['question'] = questions[0]['question']
-    session['score'] = 0
-    session['attempts'] = 0
-    print('Does this work?')
-    return redirect(url_for("riddle"))
-    
+index = 0
+score = 0
+attempts = 0
+question = 0
+
+
+"""
+Load the json file containing the riddles
+"""
+@app.route("/<username>", methods = ["GET","POST"]) #Username passed from index function, value optained from form post. 
+def riddle(username):
+    questions = []
+    #Load the json file containing the riddles
+    with open("quiz/data/riddles.json", "r") as json_data:
+        questions = json.load(json_data)
+        print(questions)
+        #Set the index to 0 to display the first riddle in the list 
+        session['index'] = 0
+        session['question'] = questions[0]['question']
+        session['score'] = 0
+        session['attempts'] = 0
         
-@app.route("/riddle", methods=["GET", "POST"])
-def riddle():
-    if "username" not in session:
-        return redirect(url_for("index"))
-        
-    if request.method == "POST":
-        print(session['index'])
-        print(session['score'])
-        print(request.form['answer'])
-        if session['index'] <= 4:
-            user_answer = request.form['answer']
-            actual_answer = questions[session['index']]['answer']
-            print(user_answer)
-            if actual_answer == user_answer:
-                flash('You have got it right!')
-                print('You have got it right!')
-                session['score'] += 1 # increments the score if the answer is correct
-                session['index'] += 1 # increments the index to the next question if the answer is correct
-                session['question']['index'] + 1
-                print(session['index'])
-                #print(session['attempts'])
-                #print(session['score'])
-                print(session['question']) 
+        if request.method == "POST":
+            print(session['index'])
+            print(session['score'])
+            print(request.form['answer'])
+            if session['index'] <= 4:
+                user_answer = request.form['answer']
+                actual_answer = questions[session['index']]['answer']
+                print(user_answer)
+                if actual_answer == user_answer:
+                    flash('You have got it right!')
+                    print('You have got it right!')
+                    session['score'] += 1 # increments the score if the answer is correct
+                    #session['index'] += 1 # increments the index to the next question if the answer is correct
+                    #session['question']['index'] + 1
+                    print(session['index'])
+                    #print(session['attempts'])
+                    #print(session['score'])
+                    print(session['question']) 
+                else:
+                    session['attempts'] += 1
             else:
-                session['attempts'] += 1
-        else:
-            session.pop('_flashes', None) # Return None to avoid an Error on the last riddle
+                session.pop('_flashes', None) # Return None to avoid an Error on the last riddle
     
         context = {
             'index': session['index'],
