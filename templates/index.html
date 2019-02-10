@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <title>Lee's Riddles Game</title>
 {% extends 'base.html' %} {% block content %}
-        <div class="row">
+        <div class='container'>
+            <div class="row">
+                <div id="box1" class="instruction_box">
+                    <p>Do you fancy playing my riddles game? It is simple to play, just enter a username and then it will bring up the 1st riddle. You will then have 3 attempts to get it right, answer the riddle correctly and it will take you to the next riddle or get it wrong and then it's game over! Come and have a go at my riddles!</p>
+              </div>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             <ul class="flashes">
@@ -12,10 +15,10 @@
             </ul>
             {% endif %}
             {% endwith %}
+            </div>
         </div>
         <div class="post-preview">
-            <a href="users.txt">
-                <h4 class="username">Please enter your username</h4></a>
+            <h4 class="username">Please enter your username</h4></a>
         </div>
     <div class="row">
         <form method="POST">

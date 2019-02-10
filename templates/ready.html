@@ -2,25 +2,30 @@
 
     <!-- Main Content -->
         <div class="container">
-                <div class="col-md-8 col-md-10 mx-auto">
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <ul class="flashes">
-                    {% for message in messages %}
-                    <li>{{ message }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-                {% endwith %}
-                </div>
+            <div class="col-md-8 col-md-10 mx-auto">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+            </div>
                 <div class="site-heading">
-                     <h3>{{ riddle_question[index]["question"] }}</h3>
-                     <form method="POST">
+                    <h3>Question{{ context.index + 1 }}</h3>
+                    <p class="lead">{{ context.question }}</p>
                 </div>
-                <div class="form-group button-submit">
-                    <h2><input type ="text" name="answer" id="answer">
-                    <button class="btn btn-primary btn-sm">Submit</button></h2>
-                </div>
-        </form>
+                <form method="POST" action="/{{ context.username }}">
+                    <div class="input-group">
+          			<input id="user_answer" type="text" class="form-control" name="answer" placeholder="Enter your answer here" autofocus>
+          			<input type="hidden" name="index" id="index" value={{ index }}>
+          			<input type="hidden" name="score" id="score" value={{ score }}>
+          			<input type="hidden" name="correct_answer" id="correct_answer" value={{ correct_answer }}>
+          			</div></br>
+          			<button name="redirect" class="btn btn-primary btn-sm" value="Redirect">Submit</button>
+                    </div>
+                </form>
         </div>
 {% endblock %}
