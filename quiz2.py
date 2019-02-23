@@ -33,14 +33,6 @@ Add new users to the users file
 """
 def new_user(username):
     write_file("quiz/data/users.txt", username)
-    
-    
-"""
-Check the player's answer against our own
-"""
-def validateAnswer(question, answer):
-    answer_given = request.form["answer"].lower()
-    return answer_given
 
 
 """
@@ -55,56 +47,49 @@ def countRiddles():
 Load the json file containing the riddles
 """
 def loadRiddles():
-    data = []
+    riddles = []
     #Load the json file containing the riddles
     with open("quiz/data/riddles.json", "r") as json_data:
-        data = json.load(json_data)
-        print(data)
-        return data
+        riddles = json.load(json_data)
+        print(riddles)
+        return riddles
         
 
 @app.route("/<username>", methods = ["GET","POST"])
 def new_game(username):
     #Set the index to 0 to display the first riddle in the list 
-    #session['index'] = 0
-    #session['score'] = 0
-    #session['attempts'] = 0
+    session['index'] = 0
+    session['score'] = 0
+    session['attempts'] = 0
     
     # riddles are stored in JSON file and are indexed
-    data = []
+    riddles = []
     
     # Load JSON data from riddles.json
-    data = loadRiddles()
+    riddles = loadRiddles()
     
     # Set the first riddle
-    questionNumber = 0
+    session['questionNumber'] = 0
         
     if request.method == "POST":
         print(session['index'])
-        print(session['score'])
-        print(request.form['answer'])
-        #if session['index'] <= 4:
+        if session['index'] <= 4:
         
         # post riddle number and increment the riddle by 1 each time 
         # a correct answer is given.
-        #questionNumber = int(request.form['context.index'])
-        
-        # Call validateAnswer function
-        answer_given = validateAnswer("question", "answer")
-            
-        if data[questionNumber]["answer"] in answer_given:
+            user_answer = request.form['answer']
+            actual_answer = riddles[session['index']]['answer']
+            print(user_answer)
             session['score'] += 1 
-            questionNumber += 1 
+            session['questionNumber'] += 1 
             flash('You have got it right!')
             print('You have got it right!')
-                    
-            # post riddle number and increment the riddle by 1 each time 
-            # a correct answer is given.
             session['index'] += 1 
-            #session['question']['index'] + 1
             print(session['index'])
-            #print(session['attempts'])
-            #print(session['score'])
+            print(session['attempts'])
+            print(session['score'])
+            print(session['questionNumber'])
+            print(question)
         else:
             session['attempts'] += 1
     else:
@@ -113,12 +98,13 @@ def new_game(username):
     context = {
         'index': session['index'],
         'question': session['question'],
+        'questionNumber': session['questionNumber'],
         'attempts': session['attempts'],
         'username': session['username'],
         'score': session['score']
         }
         
-    return render_template("ready.html", username=username, context=context)
+    return render_template("ready.html", question=session['question'], username=username, context=context)
     
             
     # To end the game after 3 incorrect answers

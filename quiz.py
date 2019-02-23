@@ -1,11 +1,23 @@
 import os
 import json
 import copy
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, url_for
 from collections import Counter
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
+
+
+MAX_ATTEMPTS = 3
+with open("quiz/data/riddles.json", "r") as json_data:
+    riddles = json.load(json_data)
+    print(riddles)
+
+
+high_score = {
+    "name": "nobody",
+    "score": 0
+}
 
 
 """
@@ -16,7 +28,7 @@ def index():
     if request.method == "POST":
         new_user(request.form["username"])
         session['username'] = request.form['username']
-        return redirect(request.form["username"])
+        return redirect(request.form['username'])
     return render_template("index.html")
 
 
@@ -35,10 +47,14 @@ def new_user(username):
     write_file("quiz/data/users.txt", username)
 
 
-index = 0
-score = 0
-attempts = 0
-question = 0
+@app.route("/new_game", methods=["POST"])
+def new_game():
+    session['username'] = request.form['username']
+    session['index'] = 0
+    session['score'] = 0
+    session['riddle_num'] = 0
+    session['attempts'] = MAX_ATTEMPTS
+    return redirect(url_for("riddle"))
 
 
 """
@@ -46,57 +62,54 @@ Load the json file containing the riddles
 """
 @app.route("/<username>", methods = ["GET","POST"]) #Username passed from index function, value optained from form post. 
 def riddle(username):
-    questions = []
-    #Load the json file containing the riddles
-    with open("quiz/data/riddles.json", "r") as json_data:
-        questions = json.load(json_data)
-        print(questions)
-        #Set the index to 0 to display the first riddle in the list 
-        session['index'] = 0
-        session['question'] = questions[0]['question']
-        session['score'] = 0
-        session['attempts'] = 0
-        
-        if request.method == "POST":
-            print(session['index'])
-            print(session['score'])
-            print(request.form['answer'])
-            if session['index'] <= 4:
-                user_answer = request.form['answer']
-                actual_answer = questions[session['index']]['answer']
-                print(user_answer)
-                if actual_answer == user_answer:
-                    flash('You have got it right!')
-                    print('You have got it right!')
-                    session['score'] += 1 # increments the score if the answer is correct
-                    #session['index'] += 1 # increments the index to the next question if the answer is correct
-                    #session['question']['index'] + 1
-                    print(session['index'])
-                    #print(session['attempts'])
-                    #print(session['score'])
-                    print(session['question']) 
-                else:
-                    session['attempts'] += 1
+    if "username" not in session:
+        return redirect(url_for("index"))
+      
+    if request.method == "POST" and session['riddle_num'] < len(riddles):
+        previous_riddle = riddles[session['riddle_num']]
+        if request.form['answer'].lower() == previous_riddle["answer"]:
+            session['score'] += 1 # increments the score if the answer is correct
+            #session['index'] += 1 # increments the index to the next question if the answer is correct
+            session['riddle_num'] += 1
+            print('answer')
+            print(session['riddle_num'])
+            if session['riddle_num'] < len(riddles):
+                flash('You have got it right!')
+                print('You have got it right!')
+                print(session['index'])
+                print(session['riddle'])
+                print(session['riddle_num'])
             else:
-                session.pop('_flashes', None) # Return None to avoid an Error on the last riddle
+                flash("Correct answer, %s!" % session['username'])
+        elif not session['attempts']:
+            session['riddle_num'] += 1
+            session['attempts'] = MAX_ATTEMPTS
+            if session['riddle_num'] < len(riddles):
+                flash("Wrong answer, try again!")
+        else:
+            session['attempts'] = 1
+            flash("Wrong answer, %s. You have %s attempts left." % (
+                  session['username'], session['attempts']))
+                  
+    if session["riddle_num"] >= len(riddles):
+        if session['score'] >= high_score['score']:
+            high_score['score'] = session['score']
+            high_score['username'] = session['username']
+        return render_template("game_over.html", username=session['username'],
+                        score=session['score'],
+                        highscore=high_score['score'],
+                        highscorer=high_score['username'])
     
-        context = {
-            'index': session['index'],
-            'question': session['question'],
-            'attempts': session['attempts'],
-            'username': session['username'],
-            'score': session['score']
-            }
+    context = {
+        'index': session['index'],
+        'question': session['question'],
+        'attempts': session['attempts'],
+        'username': session['username'],
+        'score': session['score']
+        }
         
-    return render_template("ready.html", context=context)
-    
-            
-    # To end the game after 3 incorrect answers
-@app.route("/game_over", methods = ["GET","POST"])
-def game_over():
-    if session['attempts'] <= 3:
-        write_file("quiz/data/scores.txt", "{0}" " ({1})" .format(session['score'], session['username']))
-        return redirect("game_over")
+    new_riddle = riddles[session['riddle_num']]
+    return render_template("ready.html", riddle=new_riddle['riddle'], riddleNumber=session['riddle_num'], context=context)
         
         
 """
